@@ -1,0 +1,13 @@
+.button button{
+    border-radius: 5px;
+    font-size: 15px;
+    letter-spacing: .5px;
+    outline: none;
+    padding: 8px 20px;
+    text-decoration: none;
+    transition: all .3s;
+    background: #396cf0;
+    color: #fff;
+    border: #396cf0;
+    width: 100%;
+}

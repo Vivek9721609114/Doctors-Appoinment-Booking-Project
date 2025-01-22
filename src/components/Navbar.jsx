@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const Nvabar = () => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const userDet = JSON.parse(localStorage.getItem("userDet"));
 
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(true);
+
+  const onLogout = () => {
+    localStorage.removeItem("userDet");
+    navigate("/");
+  };
   return (
     <div className="flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400">
       <img
@@ -34,7 +39,7 @@ const Nvabar = () => {
         </NavLink>
       </ul>
       <div className="flex items-center gap-4">
-        {token ? (
+        {userDet ? (
           <div className="flex items-center gap-2 cursor-pointer group relative">
             <img className="w-8 rounded-full" src={assets.profile_pic} alt="" />
             <img className="w-2.5" src={assets.dropdown_icon} alt="" />
@@ -52,8 +57,16 @@ const Nvabar = () => {
                 >
                   My Appoinments
                 </p>
+                {userDet.role === "admin" && (
+                  <p
+                    onClick={() => navigate("create-user")}
+                    className="hover:text-black cursor-pointer"
+                  >
+                    Admin Pannel
+                  </p>
+                )}
                 <p
-                  onClick={() => setToken(false)}
+                  onClick={onLogout}
                   className="hover:text-black cursor-pointer"
                 >
                   Log out
@@ -66,7 +79,7 @@ const Nvabar = () => {
             onClick={() => navigate("/login")}
             className="bg-primary text-white px-8 py-3 rounded-full font-light hidden md:block"
           >
-            Create account
+            Login
           </button>
         )}
         <img
@@ -114,4 +127,4 @@ const Nvabar = () => {
   );
 };
 
-export default Nvabar;
+export default Navbar;

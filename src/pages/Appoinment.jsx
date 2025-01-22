@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
+import toast from "react-hot-toast";
 
 const Appointment = () => {
   const { docId } = useParams();
   const { doctors, currencySymbol } = useContext(AppContext);
+  const userDet = JSON.parse(localStorage.getItem("userDet"));
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -78,6 +80,13 @@ const Appointment = () => {
   useEffect(() => {
     console.log(docSlots);
   }, [docSlots]);
+
+  const onOpenAppointmentForm = () => {
+    if (userDet) {
+    } else {
+      toast.error("Please Login First!");
+    }
+  };
 
   return (
     docInfo && (
@@ -168,6 +177,7 @@ const Appointment = () => {
             )}
           </div>
           <button
+            onClick={onOpenAppointmentForm}
             disabled={!slotTime}
             className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 ${
               !slotTime ? "opacity-50 cursor-not-allowed" : ""
