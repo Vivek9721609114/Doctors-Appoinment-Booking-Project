@@ -12,7 +12,6 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AdminPannel from "./pages/AdminPannel";
 import { Toaster } from "react-hot-toast";
-import ApponitmentCard from "../../Admin/src/components/ApponitmentCard";
 
 const App = () => {
   return (
@@ -29,9 +28,9 @@ const App = () => {
         <Route path="/my-appoinments" element={<MyAppoinments />} />
         <Route path="create-user" element={<AdminPannel />} />
         <Route path="/appoinment/:docId" element={<Appoinment />} />
-        <Route path="/appinmentcard" element={<ApponitmentCard />} />
       </Routes>
       <Footer />
+
       <Toaster position="top-center" reverseOrder={false} />
     </div>
   );

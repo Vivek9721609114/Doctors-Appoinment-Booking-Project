@@ -1,14 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctors from "../components/RelatedDoctors";
-import toast from "react-hot-toast";
+import Modal from "../Modal";
+import { IoMdClose } from "react-icons/io";
+import styles from "./index.module.css";
+import axios from "axios";
 
 const Appointment = () => {
   const { docId } = useParams();
   const { doctors, currencySymbol } = useContext(AppContext);
-  const userDet = JSON.parse(localStorage.getItem("userDet"));
+  const [modal, setModal] = useState(false);
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
@@ -81,16 +84,217 @@ const Appointment = () => {
     console.log(docSlots);
   }, [docSlots]);
 
-  const onOpenAppointmentForm = () => {
-    if (userDet) {
-    } else {
-      toast.error("Please Login First!");
+  const onOpenModal = () => {
+    setModal(true);
+  };
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "DATA":
+        return {
+          ...state,
+          ...action.payload,
+        };
+      case "UPLOAD_IMAGE":
+        return;
     }
+  };
+
+  const [state, dispatch] = useReducer(reducer, {
+    patientname: "",
+    department: "",
+    doctorname: "",
+    email: "",
+    phone: "",
+    bio: "",
+    profileImage: "",
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString(),
+    status: "pending",
+  });
+
+  const onHandleChange = (e) => {
+    dispatch({
+      type: "DATA",
+      payload: { ...state, [e.target.id]: e.target.value },
+    });
+  };
+
+  console.log(state);
+
+  const onSaveData = () => {
+    const config = {
+      url: "https://doctors-appointment-data-default-rtdb.firebaseio.com/book.json",
+      method: "post",
+      data: state,
+    };
+
+    axios(config)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     docInfo && (
       <div>
+        {modal && (
+          <>
+            <div>
+              {/* <div onClick={() => setModal(false)}> */}
+              <Modal>
+                <div className={styles.modalopen}>
+                  <div className={styles.modal_header}>
+                    <h4 className={styles.modal_header_left}>
+                      Book an Appointment
+                    </h4>
+                    <div className={styles.header_right}>
+                      <IoMdClose onClick={() => setModal(false)} size={25} />
+                    </div>
+                  </div>
+                  <div className={styles.modal_body}>
+                    <div className={styles.body_content}>
+                      <div className={styles.input_full}>
+                        <div>Patient Name *</div>
+                        <input
+                          onChange={onHandleChange}
+                          type="text"
+                          id="patientname"
+                          placeholder="Patient Name :"
+                        />
+                      </div>
+                      <div className={styles.mid_box}>
+                        <div className={styles.input_mid}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Departments *</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="text"
+                                id="department"
+                                placeholder="Departments :"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Doctor Name *</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="text"
+                                id="doctorname"
+                                placeholder="Doctor Name :"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Your Email *</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="email"
+                                id="email"
+                                placeholder="Email :"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.input_mid}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Your Phone *</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="number"
+                                id="phone"
+                                placeholder="Phone :"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Date :</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="date"
+                                id="date"
+                                placeholder="dd-mm-yyyy :"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              rowGap: "10px",
+                            }}
+                          >
+                            <div>Time :</div>
+                            <div>
+                              <input
+                                onChange={onHandleChange}
+                                type="text"
+                                id="time"
+                                placeholder="Time :"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={styles.input_top}>
+                        <div style={{ marginBottom: "0.5rem" }}>Comments *</div>
+                        <input
+                          type="text"
+                          id="bio"
+                          placeholder="Bio here :"
+                          onChange={onHandleChange}
+                        />
+                      </div>
+                      <div className={styles.btn}>
+                        <button onClick={onSaveData}>
+                          Book An Appointment
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            </div>
+          </>
+        )}
         {/* ---Doctors Details------- */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div>
@@ -177,7 +381,7 @@ const Appointment = () => {
             )}
           </div>
           <button
-            onClick={onOpenAppointmentForm}
+            onClick={onOpenModal}
             disabled={!slotTime}
             className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 ${
               !slotTime ? "opacity-50 cursor-not-allowed" : ""
