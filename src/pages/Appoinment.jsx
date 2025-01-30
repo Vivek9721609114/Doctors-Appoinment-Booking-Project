@@ -7,6 +7,7 @@ import Modal from "../Modal";
 import { IoMdClose } from "react-icons/io";
 import styles from "./index.module.css";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -17,18 +18,27 @@ const Appointment = () => {
 
   const [docInfo, setDocInfo] = useState(null);
   const [docSlots, setDocSlots] = useState([]);
+  const [date, setDate] = useState("");
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
   const [loadingSlots, setLoadingSlots] = useState(true); // To track if slots are loading
 
   const fetchDocInfo = async () => {
-    const docInfo = doctors.find((doc) => doc._id === docId);
-    setDocInfo(docInfo);
+    const docData = doctors.find((doc) => doc._id === docId);
+    dispatch({
+      type: "DOCTOR",
+      payload: {
+        ...state,
+        doctorname: docData?.name,
+        department: docData?.speciality,
+      },
+    });
+    setDocInfo(docData);
   };
 
   const getAvailableSlots = async () => {
     setDocSlots([]);
-    setLoadingSlots(true); // Set loading state true
+    setLoadingSlots(true);
 
     let today = new Date();
     let allSlots = [];
@@ -67,7 +77,7 @@ const Appointment = () => {
       allSlots.push(timeSlots);
     }
     setDocSlots(allSlots);
-    setLoadingSlots(false); // Set loading state false when slots are fetched
+    setLoadingSlots(false);
   };
 
   useEffect(() => {
@@ -95,6 +105,21 @@ const Appointment = () => {
           ...state,
           ...action.payload,
         };
+      case "DOCTOR":
+        return {
+          ...state,
+          ...action.payload,
+        };
+      case "TIME":
+        return {
+          ...state,
+          ...action.payload,
+        };
+      case "DATE":
+        return {
+          ...state,
+          ...action.payload,
+        };
       case "UPLOAD_IMAGE":
         return;
     }
@@ -102,27 +127,34 @@ const Appointment = () => {
 
   const [state, dispatch] = useReducer(reducer, {
     patientname: "",
-    department: "",
-    doctorname: "",
+    department: docInfo?.speciality,
+    doctorname: docInfo?.name,
     email: "",
+    age: "",
     phone: "",
+    gender: "Male",
     bio: "",
     profileImage: "",
-    date: new Date().toLocaleDateString(),
-    time: new Date().toLocaleTimeString(),
+    date: date,
+    time: slotTime,
     status: "pending",
   });
 
   const onHandleChange = (e) => {
     dispatch({
       type: "DATA",
-      payload: { ...state, [e.target.id]: e.target.value },
+      payload: {
+        ...state,
+        [e.target.id]: e.target.value,
+      },
     });
   };
 
   console.log(state);
 
-  const onSaveData = () => {
+  const onSaveData = (event) => {
+    event.preventDefault();
+
     const config = {
       url: "https://doctors-appointment-data-default-rtdb.firebaseio.com/book.json",
       method: "post",
@@ -131,11 +163,41 @@ const Appointment = () => {
 
     axios(config)
       .then((res) => {
-        console.log(res);
+        toast.success("Apponitment booked successfully");
       })
       .catch((err) => {
         console.log(err);
       });
+    setModal(false);
+  };
+
+  const onSelectDay = (ind, it) => {
+    const date = new Date(it[ind].dateTime);
+
+    const newDate = `${
+      date.getDate() > 9 ? date.getDate() : "0" + date.getDate()
+    }-${
+      date.getMonth() + 1 > 9
+        ? date.getMonth() + 1
+        : "0" + (date.getMonth() + 1)
+    }-${date.getFullYear()}`;
+
+    setDate(newDate);
+
+    dispatch({
+      type: "DATE",
+      payload: { date: newDate },
+    });
+
+    setSlotIndex(ind);
+  };
+
+  const onSelectTime = (item) => {
+    setSlotTime(item.time);
+    dispatch({
+      type: "TIME",
+      payload: { time: item.time },
+    });
   };
 
   return (
@@ -144,7 +206,6 @@ const Appointment = () => {
         {modal && (
           <>
             <div>
-              {/* <div onClick={() => setModal(false)}> */}
               <Modal>
                 <div className={styles.modalopen}>
                   <div className={styles.modal_header}>
@@ -156,139 +217,210 @@ const Appointment = () => {
                     </div>
                   </div>
                   <div className={styles.modal_body}>
-                    <div className={styles.body_content}>
-                      <div className={styles.input_full}>
-                        <div>Patient Name *</div>
-                        <input
-                          onChange={onHandleChange}
-                          type="text"
-                          id="patientname"
-                          placeholder="Patient Name :"
-                        />
-                      </div>
-                      <div className={styles.mid_box}>
-                        <div className={styles.input_mid}>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Departments *</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="text"
-                                id="department"
-                                placeholder="Departments :"
-                              />
+                    <form onSubmit={onSaveData}>
+                      <div className={styles.body_content}>
+                        <div className={styles.input_full}>
+                          <div>Patient Name *</div>
+                          <input
+                            required
+                            onChange={onHandleChange}
+                            type="text"
+                            id="patientname"
+                            placeholder="Patient Name :"
+                          />
+                          {state.patientname.length < 3
+                            ? " ! Please Enter the correct name"
+                            : ""}
+                        </div>
+                        <div className={styles.mid_box}>
+                          <div className={styles.input_mid}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Departments *</div>
+                              <div>
+                                <input
+                                  type="text"
+                                  value={docInfo?.speciality}
+                                  id="department"
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Doctor Name *</div>
+                              <div>
+                                <input
+                                  // onChange={onHandleChange}
+                                  required
+                                  type="text"
+                                  id="doctorname"
+                                  value={docInfo?.name}
+                                  placeholder="Doctor Name :"
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Your Email *</div>
+                              <div>
+                                <input
+                                  onChange={onHandleChange}
+                                  type="email"
+                                  required
+                                  id="email"
+                                  placeholder="Email :"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Age *</div>
+                              <div>
+                                <input
+                                  onChange={onHandleChange}
+                                  type="number"
+                                  required
+                                  id="age"
+                                  placeholder="Age :"
+                                />
+                                {state.age.length > 2
+                                  ? " ! Please Enter the correct age"
+                                  : ""}
+                              </div>
                             </div>
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Doctor Name *</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="text"
-                                id="doctorname"
-                                placeholder="Doctor Name :"
-                              />
+                          <div className={styles.input_mid}>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Your Phone *</div>
+                              <div>
+                                <input
+                                  onChange={onHandleChange}
+                                  type="number"
+                                  id="phone"
+                                  placeholder="Phone :"
+                                  required
+                                />
+                                {state.phone.length > 0 &&
+                                  state.phone.length !== 10 && (
+                                    <p>
+                                      Please Enter A valid Phone Number (10
+                                      Digits)
+                                    </p>
+                                  )}
+                              </div>
                             </div>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Your Email *</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="email"
-                                id="email"
-                                placeholder="Email :"
-                              />
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Date :</div>
+                              <div>
+                                <input
+                                  // onChange={onHandleChange}
+                                  type="text"
+                                  id="date"
+                                  placeholder="dd-mm-yyyy :"
+                                  required
+                                  value={date}
+                                  readOnly
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Gender *</div>
+                              <div>
+                                <select
+                                  name=""
+                                  id="gender"
+                                  style={{ color: "#212529" }}
+                                  onChange={onHandleChange}
+                                >
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                rowGap: "10px",
+                              }}
+                            >
+                              <div>Time :</div>
+                              <div>
+                                <input
+                                  // onChange={onHandleChange}
+                                  type="text"
+                                  id="time"
+                                  placeholder="Time :"
+                                  readOnly
+                                  value={slotTime}
+                                  required
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className={styles.input_mid}>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Your Phone *</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="number"
-                                id="phone"
-                                placeholder="Phone :"
-                              />
-                            </div>
+                        <div className={styles.input_top}>
+                          <div style={{ marginBottom: "0.5rem" }}>
+                            Comments *
                           </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Date :</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="date"
-                                id="date"
-                                placeholder="dd-mm-yyyy :"
-                              />
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: "10px",
-                            }}
-                          >
-                            <div>Time :</div>
-                            <div>
-                              <input
-                                onChange={onHandleChange}
-                                type="text"
-                                id="time"
-                                placeholder="Time :"
-                              />
-                            </div>
-                          </div>
+                          <input
+                            type="text"
+                            id="bio"
+                            placeholder="Bio here :"
+                            onChange={onHandleChange}
+                          />
+                        </div>
+
+                        <div className={styles.btn}>
+                          <input
+                            style={{ background: "#5F6FFF", color: "#fff" }}
+                            type="submit"
+                            value="Book An Apponitment"
+                          />
                         </div>
                       </div>
-                      <div className={styles.input_top}>
-                        <div style={{ marginBottom: "0.5rem" }}>Comments *</div>
-                        <input
-                          type="text"
-                          id="bio"
-                          placeholder="Bio here :"
-                          onChange={onHandleChange}
-                        />
-                      </div>
-                      <div className={styles.btn}>
-                        <button onClick={onSaveData}>
-                          Book An Appointment
-                        </button>
-                      </div>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </Modal>
@@ -347,7 +479,7 @@ const Appointment = () => {
             ) : (
               docSlots.map((item, index) => (
                 <div
-                  onClick={() => setSlotIndex(index)}
+                  onClick={() => onSelectDay(index, item)}
                   className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
                     slotIndex === index
                       ? "bg-primary text-white"
@@ -367,7 +499,7 @@ const Appointment = () => {
             ) : (
               docSlots[slotIndex]?.map((item, index) => (
                 <p
-                  onClick={() => setSlotTime(item.time)}
+                  onClick={() => onSelectTime(item)}
                   className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${
                     item.time === slotTime
                       ? "bg-primary text-white"

@@ -91,3 +91,51 @@ input {
 .btn {
     margin-top: 1rem;
 }
+select{
+    background-color: #fff;
+        border: 1px solid #ced4da;
+        width: 100% !important;
+        border-radius: .375rem;
+        height: 35px;
+        color: #212529;
+}
+select option{
+color: #ced4da;;
+}
+
+
+.paymodal{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.container .content{
+    width: 600px;
+    margin: 40px  0;
+}
+
+.content .top{
+    width: 100%;
+    background: yellow;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top .close{
+    text-align: right;
+}
+.content .bottom{
+    width: 100%;
+    background: pink;
+}
