@@ -138,4 +138,23 @@ color: #ced4da;;
 .content .bottom{
     width: 100%;
     background: pink;
+    display: flex;
+        align-items: center;
+        flex-direction: column;
+            padding: 10px 20px;
+}
+
+
+.bottom label input{
+    width: 300px;
+}
+
+.btn1{
+    border: 1px solid #396cf0;
+    margin: 10px;
+    padding: 5px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    background-color: #396cf0;
+    color: #fff;
 }

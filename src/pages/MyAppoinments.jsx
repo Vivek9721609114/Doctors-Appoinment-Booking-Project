@@ -3,6 +3,7 @@ import styles from "./index.module.css";
 import { AppContext } from "../context/AppContext";
 import Modal from "../Modal";
 import { IoCloseSharp } from "react-icons/io5";
+import PaygateWay from "../components/PaygateWay";
 const MyAppoinments = () => {
   const [modal, setModal] = useState(false);
   const { doctors } = useContext(AppContext);
@@ -16,6 +17,11 @@ const MyAppoinments = () => {
     <>
       {modal && (
         <Modal>
+          <PaygateWay></PaygateWay>
+        </Modal>
+      )}
+      {modal && (
+        <Modal>
           <div className={styles.paymodal}>
             <div className={styles.container}>
               <div className={styles.content}>
@@ -26,41 +32,16 @@ const MyAppoinments = () => {
                   </div>
                 </div>
                 <div className={styles.bottom}>
-                  bottom
-                  <h1>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Ipsam eos deleniti libero ad cupiditate maiores!
-                    Exercitationem ut nemo quasi maiores. Lorem ipsum dolor sit,
-                    amet consectetur adipisicing elit. Beatae, voluptate labore
-                    illum modi maiores dicta nobis iusto assumenda, ex non vero
-                    eligendi dolor odio obcaecati veritatis, eaque eveniet?
-                    Laudantium tenetur commodi labore voluptatibus error! Dicta
-                    atque eligendi officia ipsam alias reiciendis velit, rerum
-                    hic saepe odit aut. Aut, deleniti! Ullam voluptatem
-                    assumenda excepturi repellat magnam asperiores non ut a
-                    deserunt nostrum porro provident quidem corrupti, sapiente
-                    officia? Molestiae est consequuntur quo officiis porro
-                    veritatis, amet harum ex numquam facilis, accusantium rerum
-                    laboriosam? Iure, non? Dolorum tempora, eaque necessitatibus
-                    itaque nisi, dolore laudantium ipsa voluptatem eius
-                    repellendus laboriosam? Voluptatibus ex assumenda animi esse
-                    optio reprehenderit debitis minima totam distinctio cumque
-                    consectetur at iusto velit officiis quidem voluptas, eaque
-                    minus nulla iste, cum incidunt quis pariatur a!
-                    Exercitationem alias soluta eaque inventore placeat. Quos
-                    quasi eveniet nulla officiis pariatur, velit at nobis
-                    praesentium architecto consequuntur eaque accusamus facere
-                    asperiores eligendi laudantium ipsa quibusdam laborum porro
-                    fuga ea quod? Incidunt earum accusantium sit quod quas,
-                    adipisci minima animi natus sunt iusto, architecto doloribus
-                    distinctio, inventore rem molestiae. Dolorum quibusdam
-                    doloribus iure perspiciatis, natus enim, possimus libero
-                    doloremque suscipit exercitationem illo et error sunt, autem
-                    recusandae. Expedita libero blanditiis nulla deleniti
-                    praesentium eaque nemo eius earum in corrupti ipsum maxime
-                    corporis cupiditate, ipsam est vel ab! Quaerat non
-                    dignissimos dolor nisi error qui voluptatem.
-                  </h1>
+                  <span htmlFor="">Enter Full Name :</span>
+                  <input type="text" />
+                  <span htmlFor="">Enter Full Address :</span>
+                  <input type="text" />
+                  <span htmlFor="">Enter Pin Code :</span>
+                  <input type="text" />
+                  <span htmlFor="">Enter Mobile Number :</span>
+                  <input type="text" />
+
+                  <button className={styles.btn1}>Pay</button>
                 </div>
               </div>
             </div>
