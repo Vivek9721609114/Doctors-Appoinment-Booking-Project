@@ -1,25 +1,78 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./index.module.css";
 import { AppContext } from "../context/AppContext";
 import Modal from "../Modal";
 import { IoCloseSharp } from "react-icons/io5";
-import PaygateWay from "../components/PaygateWay";
+import toast from "react-hot-toast";
 const MyAppoinments = () => {
   const [modal, setModal] = useState(false);
   const { doctors } = useContext(AppContext);
-  const OngetPay = () => {
+
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  const Shipping = parseInt(100);
+
+  const grandToatal = Shipping + totalAmount;
+
+  // payment Intigration
+
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const OngetPay = async () => {
     setModal(true);
+    // if (name === "" || address == "" || pincode == "" || phoneNumber == "") {
+    //   return toast.error("All fields are required", {
+    //     position: "top-center",
+    //     autoClose: 1000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "colored",
+    //   });
+    // }
+
+    const addressInfo = {
+      name,
+      address,
+      pincode,
+      phoneNumber,
+      date: new Date().toLocaleString({
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }),
+    };
+
+    var options = {
+      key: "rzp_test_8qV1WhfU8MDfsP",
+      key_secret: "S6UCrOLHFLnDAQhhDgAIqx5g",
+      amount: parseInt(grandToatal * 100),
+      currency: "INR",
+      order_receipt: "order_rcptid_" + name,
+      name: "Book Appoinment With Trusted Doctors",
+      description: "for testing purpose",
+      handler: function (response) {
+        console.log(response);
+        toast.success("Payment Successful");
+      },
+
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    var pay = new window.Razorpay(options);
+    pay.open();
+    // console.log(pay);
   };
-  const OnHandleDelete = () => {
-    alert("Hlo");
-  };
+
   return (
     <>
-      {modal && (
-        <Modal>
-          <PaygateWay></PaygateWay>
-        </Modal>
-      )}
       {modal && (
         <Modal>
           <div className={styles.paymodal}>
@@ -32,16 +85,31 @@ const MyAppoinments = () => {
                   </div>
                 </div>
                 <div className={styles.bottom}>
-                  <span htmlFor="">Enter Full Name :</span>
-                  <input type="text" />
-                  <span htmlFor="">Enter Full Address :</span>
-                  <input type="text" />
-                  <span htmlFor="">Enter Pin Code :</span>
-                  <input type="text" />
-                  <span htmlFor="">Enter Mobile Number :</span>
-                  <input type="text" />
-
-                  <button className={styles.btn1}>Pay</button>
+                  <span>Enter Full Name :</span>
+                  <input
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    type="text"
+                  />
+                  <span>Enter Full Address :</span>
+                  <input
+                    onChange={(e) => setAddress(e.target.value)}
+                    value={address}
+                    type="text"
+                  />
+                  <span>Enter Pin Code :</span>
+                  <input
+                    onChange={(e) => setPincode(e.target.value)}
+                    value={pincode}
+                    type="text"
+                  />
+                  <span>Enter Mobile Number :</span>
+                  <input
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    value={phoneNumber}
+                    type="text"
+                  />
+                  <button className={styles.btn1}>Pay Now</button>
                 </div>
               </div>
             </div>
@@ -82,10 +150,7 @@ const MyAppoinments = () => {
                 >
                   Pay Online
                 </button>
-                <button
-                  onClick={OnHandleDelete}
-                  className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
-                >
+                <button className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300">
                   Cancel appoinment
                 </button>
               </div>
