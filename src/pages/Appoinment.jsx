@@ -207,220 +207,222 @@ const Appointment = () => {
           <>
             <div>
               <Modal>
-                <div className={styles.modalopen}>
-                  <div className={styles.modal_header}>
-                    <h4 className={styles.modal_header_left}>
-                      Book an Appointment
-                    </h4>
-                    <div className={styles.header_right}>
-                      <IoMdClose onClick={() => setModal(false)} size={25} />
-                    </div>
-                  </div>
-                  <div className={styles.modal_body}>
-                    <form onSubmit={onSaveData}>
-                      <div className={styles.body_content}>
-                        <div className={styles.input_full}>
-                          <div>Patient Name *</div>
-                          <input
-                            required
-                            onChange={onHandleChange}
-                            type="text"
-                            id="patientname"
-                            placeholder="Patient Name :"
-                          />
-                          {state.patientname.length < 3
-                            ? " ! Please Enter the correct name"
-                            : ""}
-                        </div>
-                        <div className={styles.mid_box}>
-                          <div className={styles.input_mid}>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Departments *</div>
-                              <div>
-                                <input
-                                  type="text"
-                                  value={docInfo?.speciality}
-                                  id="department"
-                                  readOnly
-                                />
-                              </div>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Doctor Name *</div>
-                              <div>
-                                <input
-                                  // onChange={onHandleChange}
-                                  required
-                                  type="text"
-                                  id="doctorname"
-                                  value={docInfo?.name}
-                                  placeholder="Doctor Name :"
-                                  readOnly
-                                />
-                              </div>
-                            </div>
-
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Your Email *</div>
-                              <div>
-                                <input
-                                  onChange={onHandleChange}
-                                  type="email"
-                                  required
-                                  id="email"
-                                  placeholder="Email :"
-                                />
-                              </div>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Age *</div>
-                              <div>
-                                <input
-                                  onChange={onHandleChange}
-                                  type="number"
-                                  required
-                                  id="age"
-                                  placeholder="Age :"
-                                />
-                                {state.age.length > 2
-                                  ? " ! Please Enter the correct age"
-                                  : ""}
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.input_mid}>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Your Phone *</div>
-                              <div>
-                                <input
-                                  onChange={onHandleChange}
-                                  type="number"
-                                  id="phone"
-                                  placeholder="Phone :"
-                                  required
-                                />
-                                {state.phone.length > 0 &&
-                                  state.phone.length !== 10 && (
-                                    <p>
-                                      Please Enter A valid Phone Number (10
-                                      Digits)
-                                    </p>
-                                  )}
-                              </div>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Date :</div>
-                              <div>
-                                <input
-                                  // onChange={onHandleChange}
-                                  type="text"
-                                  id="date"
-                                  placeholder="dd-mm-yyyy :"
-                                  required
-                                  value={date}
-                                  readOnly
-                                />
-                              </div>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Gender *</div>
-                              <div>
-                                <select
-                                  name=""
-                                  id="gender"
-                                  style={{ color: "#212529" }}
-                                  onChange={onHandleChange}
-                                >
-                                  <option value="Male">Male</option>
-                                  <option value="Female">Female</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "10px",
-                              }}
-                            >
-                              <div>Time :</div>
-                              <div>
-                                <input
-                                  // onChange={onHandleChange}
-                                  type="text"
-                                  id="time"
-                                  placeholder="Time :"
-                                  readOnly
-                                  value={slotTime}
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.input_top}>
-                          <div style={{ marginBottom: "0.5rem" }}>
-                            Comments *
-                          </div>
-                          <input
-                            type="text"
-                            id="bio"
-                            placeholder="Bio here :"
-                            onChange={onHandleChange}
-                          />
-                        </div>
-
-                        <div className={styles.btn}>
-                          <input
-                            style={{ background: "#5F6FFF", color: "#fff" }}
-                            type="submit"
-                            value="Book An Apponitment"
-                          />
-                        </div>
+                <div>
+                  <div className={styles.modalopen}>
+                    <div className={styles.modal_header}>
+                      <h4 className={styles.modal_header_left}>
+                        Book an Appointment
+                      </h4>
+                      <div className={styles.header_right}>
+                        <IoMdClose onClick={() => setModal(false)} size={25} />
                       </div>
-                    </form>
+                    </div>
+                    <div className={styles.modal_body}>
+                      <form onSubmit={onSaveData}>
+                        <div className={styles.body_content}>
+                          <div className={styles.input_full}>
+                            <div>Patient Name *</div>
+                            <input
+                              required
+                              onChange={onHandleChange}
+                              type="text"
+                              id="patientname"
+                              placeholder="Patient Name :"
+                            />
+                            {state.patientname.length < 3
+                              ? " ! Please Enter the correct name"
+                              : ""}
+                          </div>
+                          <div className={styles.mid_box}>
+                            <div className={styles.input_mid}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Departments *</div>
+                                <div>
+                                  <input
+                                    type="text"
+                                    value={docInfo?.speciality}
+                                    id="department"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Doctor Name *</div>
+                                <div>
+                                  <input
+                                    // onChange={onHandleChange}
+                                    required
+                                    type="text"
+                                    id="doctorname"
+                                    value={docInfo?.name}
+                                    placeholder="Doctor Name :"
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Your Email *</div>
+                                <div>
+                                  <input
+                                    onChange={onHandleChange}
+                                    type="email"
+                                    required
+                                    id="email"
+                                    placeholder="Email :"
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Age *</div>
+                                <div>
+                                  <input
+                                    onChange={onHandleChange}
+                                    type="number"
+                                    required
+                                    id="age"
+                                    placeholder="Age :"
+                                  />
+                                  {state.age.length > 2
+                                    ? " ! Please Enter the correct age"
+                                    : ""}
+                                </div>
+                              </div>
+                            </div>
+                            <div className={styles.input_mid}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Your Phone *</div>
+                                <div>
+                                  <input
+                                    onChange={onHandleChange}
+                                    type="number"
+                                    id="phone"
+                                    placeholder="Phone :"
+                                    required
+                                  />
+                                  {state.phone.length > 0 &&
+                                    state.phone.length !== 10 && (
+                                      <p>
+                                        Please Enter A valid Phone Number (10
+                                        Digits)
+                                      </p>
+                                    )}
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Date :</div>
+                                <div>
+                                  <input
+                                    // onChange={onHandleChange}
+                                    type="text"
+                                    id="date"
+                                    placeholder="dd-mm-yyyy :"
+                                    required
+                                    value={date}
+                                    readOnly
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Gender *</div>
+                                <div>
+                                  <select
+                                    name=""
+                                    id="gender"
+                                    style={{ color: "#212529" }}
+                                    onChange={onHandleChange}
+                                  >
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  rowGap: "10px",
+                                }}
+                              >
+                                <div>Time :</div>
+                                <div>
+                                  <input
+                                    // onChange={onHandleChange}
+                                    type="text"
+                                    id="time"
+                                    placeholder="Time :"
+                                    readOnly
+                                    value={slotTime}
+                                    required
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={styles.input_top}>
+                            <div style={{ marginBottom: "0.5rem" }}>
+                              Comments *
+                            </div>
+                            <input
+                              type="text"
+                              id="bio"
+                              placeholder="Bio here :"
+                              onChange={onHandleChange}
+                            />
+                          </div>
+
+                          <div className={styles.btn}>
+                            <input
+                              style={{ background: "#5F6FFF", color: "#fff" }}
+                              type="submit"
+                              value="Book An Apponitment"
+                            />
+                          </div>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </Modal>

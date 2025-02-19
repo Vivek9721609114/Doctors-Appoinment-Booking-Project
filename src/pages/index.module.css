@@ -108,6 +108,7 @@ color: #ced4da;;
     width: 100%;
     display: flex;
     align-items: center;
+    display: none;
 }
 
 .container{
@@ -159,4 +160,147 @@ color: #ced4da;;
     border-radius: 10px;
     background-color: #396cf0;
     color: #fff;
+}
+
+
+
+@media screen and (min-width: 1024px) and (max-width: 1200px) {}
+
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .modalopen {
+        width: 70%;
+        position: fixed;
+        top: 60px;
+        left: 120px;
+    }
+
+    .modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid #e9ecef;
+        background: #fff;
+    }
+
+    .body_content .input_mid {
+        display: flex;
+        flex-direction: column;
+        width: 100% !important;
+        gap: 10px;
+        margin-bottom: 1rem;
+
+    }
+
+    .body_content .input_mid>div {
+        display: flex;
+        width: 100% !important;
+
+    }
+
+
+    .input_inputs {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+}
+
+
+
+@media screen and (min-width: 480px) and (max-width: 769px) {
+
+    .modalopen {
+        width: 70%;
+        position: fixed;
+        top: 50px;
+        left: 120px;
+    }
+
+    .modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid #e9ecef;
+        background-color: red;
+        background: #fff;
+    }
+
+    .body_content .input_mid {
+        display: flex;
+        flex-direction: column;
+        width: 100% !important;
+        height: auto;
+        gap: 10px;
+        margin-bottom: 1rem;
+
+    }
+
+    .body_content .input_mid>div {
+        display: flex;
+        width: 100% !important;
+
+    }
+
+
+    .input_inputs {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+
+
+
+
+}
+
+
+
+@media screen and (min-width: 0px) and (max-width: 480px) {
+
+    .modalopen {
+        width: 90%;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+
+    }
+
+    .modal_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid #e9ecef;
+        background-color: red;
+        background: #fff;
+    }
+
+    .body_content .input_mid {
+        display: flex;
+        flex-direction: column;
+        width: 100% !important;
+        height: auto;
+        gap: 10px;
+        margin-bottom: 1rem;
+
+    }
+
+    .body_content .input_mid>div {
+        display: flex;
+        width: 100% !important;
+
+    }
+
+
+    .input_inputs {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
 }

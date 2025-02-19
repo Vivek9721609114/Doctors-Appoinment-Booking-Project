@@ -54,7 +54,7 @@ const MyAppoinments = () => {
       amount: parseInt(grandToatal * 100),
       currency: "INR",
       order_receipt: "order_rcptid_" + name,
-      name: "Book Appoinment With Trusted Doctors",
+      name: "Vivek Doctor Co.",
       description: "for testing purpose",
       handler: function (response) {
         console.log(response);
@@ -67,13 +67,24 @@ const MyAppoinments = () => {
     };
 
     var pay = new window.Razorpay(options);
+
+    pay.on("payment.failed", function (response) {
+      alert(response.error.code);
+      alert(response.error.description);
+      alert(response.error.source);
+      alert(response.error.step);
+      alert(response.error.reason);
+      alert(response.error.metadata.order_id);
+      alert(response.error.metadata.payment_id);
+    });
+
     pay.open();
     // console.log(pay);
   };
 
   return (
     <>
-      {modal && (
+      {/* {modal && (
         <Modal>
           <div className={styles.paymodal}>
             <div className={styles.container}>
@@ -115,7 +126,7 @@ const MyAppoinments = () => {
             </div>
           </div>
         </Modal>
-      )}
+      )} */}
       <div>
         <p className="pb-3 mt-12 font-medium text-zinc-700 border-b">
           My Appoinments
